@@ -29,11 +29,11 @@ Menú de opciones   |  Libros disponibles: {}
         print(menu.format(len(catalogo)))
         opcion = input('Ingrese opción: ')
         if opcion == '1':
-            cargar(catalogo)
+            cargar(catalogo, "libros.csv")
         elif opcion == '2':
             if catalogo_vacio(catalogo):
                 continue
-            sumar_revision(catalogo)
+            sumar_revision()
             input("...")
         elif opcion == '3':
             if catalogo_vacio(catalogo):
@@ -43,22 +43,22 @@ Menú de opciones   |  Libros disponibles: {}
         elif opcion == '4':
             if catalogo_vacio(catalogo):
                 continue
-            popularidad_2000(catalogo)
+            popularidad_2000()
             input("...")
         elif opcion == '5':
             if catalogo_vacio(catalogo):
                 continue
-            publicaciones_por_decada(catalogo)
+            publicaciones_por_decada()
             input("...")
         elif opcion == '6':
             if catalogo_vacio(catalogo):
                 continue
-            guardar_populares(catalogo)
+            guardar_populares()
             input("...")
         elif opcion == '7':
             if catalogo_vacio(catalogo):
                 continue
-            mostrar_archivo(catalogo)
+            mostrar_archivo()
             input("...")
         elif opcion == '8':
             confirmacion = input('Seleccionó finalizar programa. ¿Está seguro que desea salir? s/n: ')

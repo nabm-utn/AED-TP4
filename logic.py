@@ -1,10 +1,54 @@
-def cargar():
+from libro import Libro
+
+
+def busqueda_binaria_indice(arreglo, nuevo_isbn):
+    """
+    Encuentra mediante búsqueda binaria la posición de inserción
+    de un nuevo libro en un arreglo, de acuerdo a su isbn.
+    Si el isbn ya existe en el arreglo, entonces retorna ¿la posición anterior?
+    """
+    min = 0
+    max = len(arreglo) - 1
+    while min <= max:
+        mid = min + (max - min) // 2
+        if arreglo[mid].isbn > nuevo_isbn:
+            max = mid - 1
+        else:
+            min = mid + 1
+    return min
+
+
+def insertar_libro(arreglo, libro):
+    """
+    Inserta un libro en el arreglo de manera que este se mantenga ordenado según ISBN.
+    Utiliza el algoritmo de inserción directa con búsqueda binaria
+    """
+    indice = busqueda_binaria_indice(arreglo, libro.isbn)
+    arreglo[indice:indice] = [libro]
+
+
+def revisar_orden(arreglo):
+    """
+    Revisa que los libros de un arreglo estén ordenados de manera ascendente por ISBN.
+    """
+    for i in range(1, len(arreglo)):
+        if arreglo[i].isbn < arreglo[i-1].isbn:
+            return False
+    return True
+
+
+def cargar(catalogo, filename="libros.csv"):
     """
     Cargar el contenido del archivo en un vector de registros de libros,
     que siempre debe mantenerse ordenado por isbn (Omitir la primera línea del archivo,
     que contiene el nombre de los campos)
     """
-    pass
+    file = open(filename, "rt", encoding="utf8")
+    lines = file.readlines()[1:]
+    for line in lines:
+        args = line.strip().split(",")
+        insertar_libro(catalogo, Libro(*args))
+    print("Catalogo ordenado:", revisar_orden(catalogo))
 
 
 def sumar_revision():
@@ -17,12 +61,48 @@ def sumar_revision():
     pass
 
 
-def menor_votado():
+def libro_revisado(catalogo):
+    revisiones_max = 0
+    libro_mas_revisado = None
+    for libro in catalogo:
+        if libro.revisiones > revisiones_max:
+            revisiones_max = libro.revisiones
+            libro_mas_revisado = libro
+    return libro_mas_revisado
+
+
+def subvector_idioma(catalogo, idioma):
+    subvector = []
+    for libro in catalogo:
+        if libro.idioma == idioma:
+            subvector.append(libro)
+    return subvector
+
+
+def calcular_rating_promedio(catalogo):
+    contador = 0
+    acumulador = 0
+    for libro in catalogo:
+        contador += 1
+        acumulador += libro.rating
+    if contador != 0:
+        return acumulador / contador
+    return None
+
+
+def menor_votado(catalogo):
     """
     Buscar en el vector el libro con mayor cantidad de revisiones.
     Informar si su rating es mayor, menor o igual al rating promedio de su mismo idioma.
     """
-    pass
+    libro = libro_revisado(catalogo)
+    libros_mismo_idioma = subvector_idioma(catalogo, libro.idioma)
+    rating_promedio = calcular_rating_promedio(libros_mismo_idioma)
+    print("El libro con más revisiones es:")
+    print(libro)
+    print("El rating promedio para el idioma {} es: {}".format(libro.idioma, rating_promedio))
+
+
 
 
 def popularidad_2000():
