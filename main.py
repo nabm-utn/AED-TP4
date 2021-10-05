@@ -48,7 +48,7 @@ Menú de opciones   |  Libros disponibles: {}
         elif opcion == '5':
             if catalogo_vacio(catalogo):
                 continue
-            publicaciones_por_decada()
+            publicaciones_por_decada(catalogo)
             input("...")
         elif opcion == '6':
             if catalogo_vacio(catalogo):

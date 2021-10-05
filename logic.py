@@ -137,7 +137,7 @@ def popularidad_2000(catalogo):
     mostrar_matriz(matriz)
 
 
-def publicaciones_por_decada():
+def publicaciones_por_decada(catalogo):
     """
     A partir del vector, generar un vector de conteo
     donde cada celda representa una década entre 1900 y 2000. La celda debe indicar
@@ -145,7 +145,30 @@ def publicaciones_por_decada():
     Informar además cuál fue la década con más publicaciones.
     Si varias tuvieran la misma cantidad, informar todas.
     """
-    pass
+    decadas = [str(i) for i in range(1900, 2001, 10)]
+    publicaciones = [0] * 11
+    i = 0
+    for libro in catalogo:
+        i += 11
+        if 1900 <= libro.año <= 2009:
+            bin = (libro.año - 1900) // 10
+            if bin > 0:
+                publicaciones[bin] += 1
+
+    publicaciones_max = 0
+    decadas_productivas = []
+    for i in range(11):
+        if publicaciones[i] > publicaciones_max:
+            publicaciones_max = publicaciones[i]
+            decadas_productivas = [decadas[i]]
+        elif publicaciones[i] == publicaciones_max:
+            decadas_productivas.append(publicaciones[i])
+
+    print("Decada | Publicaciones")
+    for i in range(11):
+        if publicaciones[i] > 0:
+            print("{:>6} | {:<}".format(decadas[i], publicaciones[i]))
+    print("decada(s) con más publicaciones: " + ", ".join(decadas_productivas))
 
 
 def guardar_populares():
