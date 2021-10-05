@@ -134,7 +134,7 @@ def popularidad_2000(catalogo):
         for año in range(2000, 2021):
             fila.append(mejor_libro_por_año(subvector, año))
         matriz.append(fila)
-    mostrar_matriz(matriz)
+    return matriz
 
 
 def publicaciones_por_decada(catalogo):

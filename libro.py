@@ -9,3 +9,6 @@ class Libro:
 
     def __str__(self):
         return "{}, {}, {}, {}, {}, {}".format(self.titulo, self.revisiones, self.año, self.idioma, self.rating, self.isbn)
+
+    def __bool__(self):
+        return self.isbn != "__________"

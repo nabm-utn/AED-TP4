@@ -10,8 +10,18 @@ def catalogo_vacio(catalogo):
     return False
 
 
+def matriz_vacia(matriz):
+    if len(matriz) == 0:
+        print("No se ha generado la matriz de publicaciones por año e idioma.")
+        print("Le sugerimos que se dirija a la opción 5 del menu principal")
+        input("...")
+        return True
+    return False
+
+
 def menu_de_opciones(catalogo):
     opcion = None
+    matriz = None
     menu = """
 Bienvenido a PyBooks!
 -----------------------------------------------------
@@ -43,7 +53,7 @@ Menú de opciones   |  Libros disponibles: {}
         elif opcion == '4':
             if catalogo_vacio(catalogo):
                 continue
-            popularidad_2000(catalogo)
+            matriz = popularidad_2000(catalogo)
             input("...")
         elif opcion == '5':
             if catalogo_vacio(catalogo):
@@ -51,9 +61,9 @@ Menú de opciones   |  Libros disponibles: {}
             publicaciones_por_decada(catalogo)
             input("...")
         elif opcion == '6':
-            if catalogo_vacio(catalogo):
+            if catalogo_vacio(catalogo) or matriz_vacia(matriz):
                 continue
-            guardar_populares()
+            guardar_populares(matriz)
             input("...")
         elif opcion == '7':
             if catalogo_vacio(catalogo):
