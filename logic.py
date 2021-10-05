@@ -1,4 +1,6 @@
 from libro import Libro
+import os.path
+import pickle
 
 
 def busqueda_binaria_indice(arreglo, nuevo_isbn):
@@ -171,18 +173,32 @@ def publicaciones_por_decada(catalogo):
     print("decada(s) con más publicaciones: " + ", ".join(decadas_productivas))
 
 
-def guardar_populares():
+def guardar_populares(matriz, filename):
     """
     Si la matriz de la opción 4 ya fue generada, almacenar
     su contenido registros por registro (omitiendo las celdas vacías) en un archivo binario
     llamado populares.dat e informar la cantidad de registros grabados.
     Si la matriz aún no fue generada, informarlo.
     """
-    pass
+    archivo = open(filename, "wb")
+    libros_grabados = 0
+    for fila in matriz:
+        for libro in fila:
+            if libro:
+                libros_grabados += 1
+                pickle.dump(libro, archivo)
+    print("Trabajo completado con éxito!")
+    print("Se grabaron {} registros en el archivo \"{}\"".format(libros_grabados, filename))
 
 
-def mostrar_archivo():
+def mostrar_archivo(filename):
     """
     Listar el contenido del archivo generado en el punto anterior.
     """
-    pass
+    filesize = os.path.getsize(filename)
+    archivo = open(filename, "rb")
+
+    print("Libros contenidos en el archivo: \"{}\"\n".format(filename))
+    while archivo.tell() < filesize:
+        libro = pickle.load(archivo)
+        print(libro)

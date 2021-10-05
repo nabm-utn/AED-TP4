@@ -1,5 +1,6 @@
 from logic import cargar, sumar_revision, menor_votado, popularidad_2000
 from logic import publicaciones_por_decada, guardar_populares, mostrar_archivo
+import os
 
 
 def catalogo_vacio(catalogo):
@@ -19,9 +20,23 @@ def matriz_vacia(matriz):
     return False
 
 
-def menu_de_opciones(catalogo):
+def archivo_invalido(filename):
+    if not os.path.exists(filename):
+        print("El archivo \"{}\" no existe. Pruebe a utilizar la opción 4 del menú principal".format(filename))
+        return True
+    elif os.path.getsize(filename) == 0:
+        print("El archivo \"{}\" está vacío.".format(filename))
+        print("Pruebe a utilizar la opción 1 y luego la opción 4 del menú principal")
+        return True
+    return False
+
+
+def menu_de_opciones():
+    catalogo = []
+    matriz = []
+    filename = "populares.dat"
+
     opcion = None
-    matriz = None
     menu = """
 Bienvenido a PyBooks!
 -----------------------------------------------------
@@ -63,12 +78,12 @@ Menú de opciones   |  Libros disponibles: {}
         elif opcion == '6':
             if catalogo_vacio(catalogo) or matriz_vacia(matriz):
                 continue
-            guardar_populares(matriz)
+            guardar_populares(matriz, filename)
             input("...")
         elif opcion == '7':
-            if catalogo_vacio(catalogo):
+            if archivo_invalido(filename):
                 continue
-            mostrar_archivo()
+            mostrar_archivo(filename)
             input("...")
         elif opcion == '8':
             confirmacion = input('Seleccionó finalizar programa. ¿Está seguro que desea salir? s/n: ')
@@ -81,5 +96,4 @@ Menú de opciones   |  Libros disponibles: {}
 
 
 if __name__ == "__main__":
-    catalogo_principal = []
-    menu_de_opciones(catalogo_principal)
+    menu_de_opciones()
