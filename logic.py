@@ -103,16 +103,38 @@ def menor_votado(catalogo):
     print("El rating promedio para el idioma {} es: {}".format(libro.idioma, rating_promedio))
 
 
+def mejor_libro_por_año(catalogo, año):
+    rating_max = 0
+    mejor_libro = Libro("none", 0, 0, 0, 0, "__________")
+    for libro in catalogo:
+        if libro.año == año and libro.rating > rating_max:
+            mejor_libro = libro
+            rating_max = libro.rating
+    return mejor_libro
 
 
-def popularidad_2000():
+def mostrar_matriz(matriz):
+    txt = "\t\t" + "\t\t".join(["{:04d}".format(i) for i in range(2000, 2021)])
+    for idioma in range(1, 28):
+        txt += "\n{:02d}\t".format(idioma) + "\t".join([libro.isbn for libro in matriz[idioma-1]])
+    print(txt+"\n")
+
+
+def popularidad_2000(catalogo):
     """
     A partir del vector, generar una matriz donde cada fila sea un idioma
     y cada columna un año de publicación. La celda debe contener el libro que tenga
     mayor rating para ese idioma y año (si hubiera varios, elegir sólo uno)
     sólo para los libros publicados entre el año 2000 y el 2020 (ambos incluídos).
     """
-    pass
+    matriz = []
+    for idioma in range(1, 28):
+        fila = []
+        subvector = subvector_idioma(catalogo, idioma)
+        for año in range(2000, 2021):
+            fila.append(mejor_libro_por_año(subvector, año))
+        matriz.append(fila)
+    mostrar_matriz(matriz)
 
 
 def publicaciones_por_decada():

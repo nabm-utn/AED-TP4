@@ -43,7 +43,7 @@ Menú de opciones   |  Libros disponibles: {}
         elif opcion == '4':
             if catalogo_vacio(catalogo):
                 continue
-            popularidad_2000()
+            popularidad_2000(catalogo)
             input("...")
         elif opcion == '5':
             if catalogo_vacio(catalogo):
