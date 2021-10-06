@@ -58,7 +58,7 @@ Menú de opciones   |  Libros disponibles: {}
         elif opcion == '2':
             if catalogo_vacio(catalogo):
                 continue
-            sumar_revision()
+            sumar_revision(catalogo)
             input("...")
         elif opcion == '3':
             if catalogo_vacio(catalogo):

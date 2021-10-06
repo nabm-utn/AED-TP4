@@ -53,14 +53,61 @@ def cargar(catalogo, filename="libros.csv"):
     print("Catalogo ordenado:", revisar_orden(catalogo))
 
 
-def sumar_revision():
+def busqueda_secuencial_titulo(catalogo, titulo):
+    for libro in catalogo:
+        if libro.titulo == titulo:
+            return libro
+    return False
+
+
+def solicitar_isbn():
+    isbn = input('Código de Identificación (ISBN): ')
+    while len(isbn) == 0:
+        print("El código no puede estar vacío...")
+        isbn = input('Código de Identificación (ISBN): ')
+    return isbn
+
+
+def solicitar_titulo():
+    titulo = input('Título: ')
+    while len(titulo) == 0:
+        titulo = input('Título (No puede estar vacío): ')
+    return titulo
+
+
+def sumar_revision(catalogo):
     """
     El usuario puede optar por buscar el libro por ISBN o por título.
     Según el criterio elegido se debe ingresar por teclado el ítem a buscar.
     Si existe en el vector el libro con el criterio buscado,  mostrar sus datos y
     sumar una revisión al mismo. Si no existe mostrar un mensaje por pantalla.
     """
-    pass
+    opcion = None
+    libro = None
+    menu = """
+Cómo desea realizar su búsqueda?
+1) Busqueda por ISBN
+2) Búsqueda por título
+3) Volver al menú principal
+"""
+    while opcion != "3":
+        print(menu)
+        opcion = input('Ingrese opción: ')
+        if opcion == "1":
+            isbn = solicitar_isbn()
+            indice = busqueda_binaria_indice(catalogo, isbn) - 1
+            libro = catalogo[indice]
+        elif opcion == "2":
+            titulo = solicitar_titulo()
+            libro = busqueda_secuencial_titulo(catalogo, titulo)
+
+        if libro:
+            print("Se encontró su libro!")
+            print("Añadiendo revisión...")
+            libro.revisiones += 1
+        else:
+            if opcion != "3":
+                print("No se encontró su libro. Intente realizar otra búsqueda.")
 
 
 def libro_revisado(catalogo):
