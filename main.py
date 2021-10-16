@@ -1,5 +1,6 @@
-from logic import cargar, sumar_revision, menor_votado, popularidad_2000
+from logic import cargar, sumar_revision, mayor_revisiones, popularidad_2000
 from logic import publicaciones_por_decada, guardar_populares, mostrar_archivo
+
 import os
 
 
@@ -14,7 +15,7 @@ def catalogo_vacio(catalogo):
 def matriz_vacia(matriz):
     if len(matriz) == 0:
         print("No se ha generado la matriz de publicaciones por año e idioma.")
-        print("Le sugerimos que se dirija a la opción 5 del menu principal")
+        print("Le sugerimos que se dirija a la opción 4 del menu principal")
         input("...")
         return True
     return False
@@ -22,7 +23,7 @@ def matriz_vacia(matriz):
 
 def archivo_invalido(filename):
     if not os.path.exists(filename):
-        print("El archivo \"{}\" no existe. Pruebe a utilizar la opción 4 del menú principal".format(filename))
+        print("El archivo \"{}\" no existe. Pruebe a utilizar la opción 6 del menú principal".format(filename))
         return True
     elif os.path.getsize(filename) == 0:
         print("El archivo \"{}\" está vacío.".format(filename))
@@ -44,7 +45,7 @@ Menú de opciones   |  Libros disponibles: {}
 -----------------------------------------------------
 1.) Cargar
 2.) Sumar revisión
-3.) Menor votado
+3.) Mayor revisiones
 4.) Popularidad 2000
 5.) Publicaciones por década
 6.) Guardar populares
@@ -63,7 +64,7 @@ Menú de opciones   |  Libros disponibles: {}
         elif opcion == '3':
             if catalogo_vacio(catalogo):
                 continue
-            menor_votado(catalogo)
+            mayor_revisiones(catalogo)
             input("...")
         elif opcion == '4':
             if catalogo_vacio(catalogo):

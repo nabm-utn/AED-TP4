@@ -50,7 +50,10 @@ def cargar(catalogo, filename="libros.csv"):
     for line in lines:
         args = line.strip().split(",")
         insertar_libro(catalogo, Libro(*args))
-    print("Catalogo ordenado:", revisar_orden(catalogo))
+    if revisar_orden(catalogo):
+        print("Se ha cargado el catálogo con éxito!")
+    else:
+        print("Ha ocurrido un error.")
 
 
 def busqueda_secuencial_titulo(catalogo, titulo):
@@ -83,7 +86,6 @@ def sumar_revision(catalogo):
     sumar una revisión al mismo. Si no existe mostrar un mensaje por pantalla.
     """
     opcion = None
-    libro = None
     menu = """
 Cómo desea realizar su búsqueda?
 1) Busqueda por ISBN
@@ -91,6 +93,7 @@ Cómo desea realizar su búsqueda?
 3) Volver al menú principal
 """
     while opcion != "3":
+        libro = None
         print(menu)
         opcion = input('Ingrese opción: ')
         if opcion == "1":
@@ -103,14 +106,17 @@ Cómo desea realizar su búsqueda?
 
         if libro:
             print("Se encontró su libro!")
-            print("Añadiendo revisión...")
+            print(libro)
+            print("\nAñadiendo revisión...")
             libro.revisiones += 1
+            print("Este libro tiene ahora {} revisiones!".format(libro.revisiones))
+
         else:
             if opcion != "3":
                 print("No se encontró su libro. Intente realizar otra búsqueda.")
 
 
-def libro_revisado(catalogo):
+def libro_mas_revisado(catalogo):
     revisiones_max = 0
     libro_mas_revisado = None
     for libro in catalogo:
@@ -135,31 +141,39 @@ def calcular_rating_promedio(catalogo):
         contador += 1
         acumulador += libro.rating
     if contador != 0:
-        return acumulador / contador
+        promedio = acumulador / contador
+        return round(promedio, 2)
     return None
 
 
-def menor_votado(catalogo):
+def mayor_revisiones(catalogo):
     """
     Buscar en el vector el libro con mayor cantidad de revisiones.
     Informar si su rating es mayor, menor o igual al rating promedio de su mismo idioma.
     """
-    libro = libro_revisado(catalogo)
+    libro = libro_mas_revisado(catalogo)
     libros_mismo_idioma = subvector_idioma(catalogo, libro.idioma)
     rating_promedio = calcular_rating_promedio(libros_mismo_idioma)
     print("El libro con más revisiones es:")
     print(libro)
     print("El rating promedio para el idioma {} es: {}".format(libro.idioma, rating_promedio))
+    msj = "...\nEl rating de su libro es {} con respecto al promeido para su idioma..."
+    if libro.rating > rating_promedio:
+        msj = msj.format("mayor")
+    elif libro.rating < rating_promedio:
+        msj = msj.format("menor")
+    else:
+        msj = msj.format("igual")
+    print(msj)
 
 
-def mejor_libro_por_año(catalogo, año):
-    rating_max = 0
-    mejor_libro = Libro("none", 0, 0, 0, 0, "__________")
+def popularidad_2000(catalogo):
+    matriz = [[Libro("none", 0, 0, 0, 0, "__________") for año in range(2000, 2021)] for idioma in range(1, 28)]
     for libro in catalogo:
-        if libro.año == año and libro.rating > rating_max:
-            mejor_libro = libro
-            rating_max = libro.rating
-    return mejor_libro
+        if 2000 <= libro.año <= 2020 and libro.rating > matriz[libro.idioma - 1][libro.año - 2000].rating:
+            matriz[libro.idioma - 1][libro.año - 2000] = libro
+    print("Se ha generado la matriz con éxito!")
+    return matriz
 
 
 def mostrar_matriz(matriz):
@@ -169,44 +183,25 @@ def mostrar_matriz(matriz):
     print(txt+"\n")
 
 
-def popularidad_2000(catalogo):
-    """
-    A partir del vector, generar una matriz donde cada fila sea un idioma
-    y cada columna un año de publicación. La celda debe contener el libro que tenga
-    mayor rating para ese idioma y año (si hubiera varios, elegir sólo uno)
-    sólo para los libros publicados entre el año 2000 y el 2020 (ambos incluídos).
-    """
-    matriz = []
-    for idioma in range(1, 28):
-        fila = []
-        subvector = subvector_idioma(catalogo, idioma)
-        for año in range(2000, 2021):
-            fila.append(mejor_libro_por_año(subvector, año))
-        matriz.append(fila)
-    return matriz
-
-
 def publicaciones_por_decada(catalogo):
     """
     A partir del vector, generar un vector de conteo
     donde cada celda representa una década entre 1900 y 2000. La celda debe indicar
-    cuántos libros se publicaron en ese año. Mostrar todas las cantidades mayores a cero.
+    cuántos libros se publicaron en esa decada. Mostrar todas las cantidades mayores a cero.
     Informar además cuál fue la década con más publicaciones.
     Si varias tuvieran la misma cantidad, informar todas.
     """
-    decadas = [str(i) for i in range(1900, 2001, 10)]
-    publicaciones = [0] * 11
-    i = 0
+    decadas = [str(i) for i in range(1900, 2000, 10)]
+    publicaciones = [0] * 10
     for libro in catalogo:
-        i += 11
-        if 1900 <= libro.año <= 2009:
+        if 1900 <= libro.año <= 1999:
             bin = (libro.año - 1900) // 10
             if bin > 0:
                 publicaciones[bin] += 1
 
     publicaciones_max = 0
     decadas_productivas = []
-    for i in range(11):
+    for i in range(10):
         if publicaciones[i] > publicaciones_max:
             publicaciones_max = publicaciones[i]
             decadas_productivas = [decadas[i]]
@@ -214,7 +209,7 @@ def publicaciones_por_decada(catalogo):
             decadas_productivas.append(publicaciones[i])
 
     print("Decada | Publicaciones")
-    for i in range(11):
+    for i in range(10):
         if publicaciones[i] > 0:
             print("{:>6} | {:<}".format(decadas[i], publicaciones[i]))
     print("decada(s) con más publicaciones: " + ", ".join(decadas_productivas))
@@ -242,6 +237,9 @@ def mostrar_archivo(filename):
     """
     Listar el contenido del archivo generado en el punto anterior.
     """
+    if not os.path.exists(filename):
+        print("El archivo no existe!")
+        return
     filesize = os.path.getsize(filename)
     archivo = open(filename, "rb")
 
